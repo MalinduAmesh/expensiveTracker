@@ -12,7 +12,8 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import{ AuthContext } from '../contexts/AuthContext'
 import HomeStackScreen from './HomeScreen';
-
+import UrlConfig from '../config/UrlConfig';
+import Income1 from './Income';
 function Home() {
     return (
       <HomeStackScreen></HomeStackScreen>
@@ -21,9 +22,7 @@ function Home() {
   
   function Income() {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Income Screen</Text>
-      </View>
+      <Income1></Income1>
     );
   }
   function Expense() {
@@ -39,7 +38,7 @@ function Home() {
     const [email,setEmail] = useState('loading');
     const Boiler = async ()=>{
        const token = await AsyncStorage.getItem('token');
-     fetch('https://a2801bee8378.ngrok.io',{
+     fetch(`${UrlConfig.BASE_URL}`,{
      headers:new Headers({
        Authorization:'Test ' + token,
      }),

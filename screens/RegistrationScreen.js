@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View, Text,Button,TextInput,StyleSheet,TouchableOpacity} from 'react-native'
+import {View, Text,Button,TextInput,StyleSheet,TouchableOpacity,KeyboardAvoidingView,TouchableWithoutFeedback,Keyboard  } from 'react-native'
 import Heading from '../components/Heading';
 import Input from '../components/Input';
 import FilledButton from '../components/FilledButton';
@@ -8,7 +8,8 @@ import Error from '../components/Error';
 import IconButton from '../components/IconButton';
 import { AuthContext } from '../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import UrlConfig from '../config/UrlConfig'
+import UrlConfig from '../config/UrlConfig';
+import * as Animatable from 'react-native-animatable';
 export default class RegistrationScreen extends Component {
 
     constructor(props) {
@@ -30,7 +31,7 @@ export default class RegistrationScreen extends Component {
 		};
 
 
-		fetch(`${UrlConfig.BASE_URL}customer/register`, {
+		fetch(`${UrlConfig.BASE_URL}/customer/register`, {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(userData)
@@ -39,7 +40,6 @@ export default class RegistrationScreen extends Component {
 			.then(async (data) => {
 				try {
 					await AsyncStorage.setItem('token', data.token);
-					this.props.navigation.navigate('Login');
 				} catch (e) {
 					console.log('error ', e);
 				}
@@ -58,8 +58,12 @@ export default class RegistrationScreen extends Component {
 
     render() {
     return (
-        <View style ={styles.container}>
-
+        // <View style ={styles.container}>
+		    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
             <Heading style={styles.title}>SIGN UP</Heading>
 
             <IconButton name={'close-outline'}/>
@@ -125,7 +129,8 @@ export default class RegistrationScreen extends Component {
              }}/> */}
              <TouchableOpacity rounded style={styles.loginBtn} onPress={() =>{
                 this.submitUserData();
-                this.props.navigation.navigate('SignUp') 
+				this.props.navigation.navigate('SignUp') 
+
               // this.props.navigation.navigate('SignInScreen') 
               }} >
             {/* // onPress={()=>{this.props.navigation.navigate('SignInScreen')}} */}
@@ -133,8 +138,9 @@ export default class RegistrationScreen extends Component {
             <Text style={styles.loginText1} >SIGN UP</Text>
 
               </TouchableOpacity>
-
-        </View>
+			  {/* </TouchableWithoutFeedback> */}
+</KeyboardAvoidingView>
+        // </View>
     )
 }
 }
@@ -144,7 +150,7 @@ const styles = StyleSheet.create({
 
     container:{
         flex:1,
-        paddingTop:120,
+        // paddingTop:120,
         padding:20,
         alignItems:'center',
     },

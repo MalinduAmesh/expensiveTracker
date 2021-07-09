@@ -2,6 +2,7 @@
 import React, { Component, useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BouncingPreloader from 'react-native-bouncing-preloader';
 
 const LoadingScreen = (props) => {
 	// class LoadingScreen extends Component {
@@ -21,9 +22,23 @@ const LoadingScreen = (props) => {
 	useEffect(() => {
 		detectLogin();
 	}, []);
+		
+	<BouncingPreloader
+	icons={[
+	  'https://www.shareicon.net/data/256x256/2016/05/04/759946_bar_512x512.png',
+	  
+	]}
+	leftRotation="-680deg"
+	rightRotation="360deg"
+	leftDistance={-180}
+	rightDistance={-250}
+	speed={1200} />
 
 	return (
+
 		<View style={styles.loading}>
+
+
 			<ActivityIndicator size="large" color="green" />
 		</View>
 	);

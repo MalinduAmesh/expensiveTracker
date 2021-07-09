@@ -24,7 +24,7 @@ export default class  SignUp  extends Component  {
 			password: this.state.password
 		};
 
-		fetch(`${UrlConfig.BASE_URL}customer/sign-in`, {
+		fetch(`${UrlConfig.BASE_URL}/customer/sign-in`, {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(userData)
@@ -34,11 +34,13 @@ export default class  SignUp  extends Component  {
 			.then(async (data) => {
 				try {
 					await AsyncStorage.setItem('token', data.token);
+          this.props.navigation.navigate('DrawerContent')
 				} catch (e) {
 					console.log('error ', e);
+          alert('Login Erorr');
 				}
 
-				alert('success Login');
+				
 				console.log(userData);
 			})
 			.catch((error) => {
@@ -48,29 +50,67 @@ export default class  SignUp  extends Component  {
 			});
 	};
 
-  loginHandle = (userName, password) => {
 
-    signIn(userName,password)
+  render() {
+    return (
+        <View style={styles.container}>
+        <Animatable.View>
+          <Image
+          style={styles.tinyLogo}
+          source={require('../assets/fingerprint.png')}
+          />
+        </Animatable.View>
+        <Animatable.View style={styles.HeaderMainContain} animation='fadeInUpBig'>
+        <Text style={styles.logo}>Welcome</Text>
+        <View style={styles.inputView} >
+          <TextInput  
+            style={styles.inputText}
+            placeholder="Email" 
+            placeholderTextColor="#353b48"
+            // autoCapitalize="none"
+            onChangeText={(text) => this.setState({ email: text })}
+
+            />
+
+        </View>
+        <View style={styles.inputView} >
+          <TextInput  
+            secureTextEntry
+            style={styles.inputText}
+            placeholder="Password" 
+            placeholderTextColor="#353b48"
+            // autoCapitalize="none"
+            onChangeText={(text) => this.setState({ password: text })}
+ 
+/>
+
+        </View>
+        <TouchableOpacity>
+          <Text style={styles.forgot}>Forgot Password?</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity rounded style={styles.loginBtn} onPress={() =>{
+          this.userLogin();
+          // this.props.navigation.navigate('SignInScreen') 
+          }} >
+        {/* // onPress={()=>{this.props.navigation.navigate('SignInScreen')}} */}
+
+        <Text style={styles.loginText1} >Sign In</Text>
+
+          </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=> this.props.navigation.navigate('RegistrationScreen')}>
+
+          <Text style={styles.LoginMain}>Don't Have An Account ?</Text>
+          <Text style={styles.loginText} >Signup</Text>
+        </TouchableOpacity>
+
+        </Animatable.View>
   
-    const foundUser = Users.filter( item => {
-        return userName == item.username && password == item.password;
-    } );
-  
-    if ( data.username.length == 0 || data.password.length == 0 ) {
-        Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-            {text: 'Okay'}
-        ]);
-        return;
+      </View>
+    )
     }
-  
-    if ( foundUser.length == 0 ) {
-        Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-            {text: 'Okay'}
-        ]);
-        return;
-    }
-    signIn(foundUser);
-  }
+}
   // const [data, setData] = React.useState({
   //   username: '',
   //   password: '',
@@ -138,70 +178,6 @@ export default class  SignUp  extends Component  {
 //   }
 // }
 
-
-
-render() {
-        return (
-            <View style={styles.container}>
-            <Animatable.View>
-              <Image
-              style={styles.tinyLogo}
-              source={require('../assets/fingerprint.png')}
-              />
-            </Animatable.View>
-            <Animatable.View style={styles.HeaderMainContain} animation='fadeInUpBig'>
-            <Text style={styles.logo}>Welcome</Text>
-            <View style={styles.inputView} >
-              <TextInput  
-                style={styles.inputText}
-                placeholder="Email" 
-                placeholderTextColor="#353b48"
-                // autoCapitalize="none"
-                onChangeText={(text) => this.setState({ email: text })}
-
-                />
-
-            </View>
-            <View style={styles.inputView} >
-              <TextInput  
-                secureTextEntry
-                style={styles.inputText}
-                placeholder="Password" 
-                placeholderTextColor="#353b48"
-                // autoCapitalize="none"
-                onChangeText={(text) => this.setState({ password: text })}
-     
-/>
-
-            </View>
-            <TouchableOpacity>
-              <Text style={styles.forgot}>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity rounded style={styles.loginBtn} onPress={() =>{
-              this.userLogin();
-              alert('Login Success');
-              this.props.navigation.navigate('DrawerContent')
-              // this.props.navigation.navigate('SignInScreen') 
-              }} >
-            {/* // onPress={()=>{this.props.navigation.navigate('SignInScreen')}} */}
-
-            <Text style={styles.loginText1} >Sign In</Text>
-
-              </TouchableOpacity>
-
-            <TouchableOpacity onPress={()=> this.props.navigation.navigate('RegistrationScreen')}>
-
-              <Text style={styles.LoginMain}>Don't Have An Account ?</Text>
-              <Text style={styles.loginText} >Signup</Text>
-            </TouchableOpacity>
-    
-            </Animatable.View>
-      
-          </View>
-        )
-        }
-}
 const styles = StyleSheet.create({
     container: {
       flex: 1,
