@@ -6,17 +6,22 @@ import { AuthContext } from './contexts/AuthContext';
 import HomeScreen from './screens/HomeScreen'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RootStackScreen from './screens/RootStackScreen';
+
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import DrawerContent from './screens/DrawerContent';
 import LoadingScreen from './screens/LoadingScreen';
 import SignUp from './screens/SignUp';
 import RegistrationScreen from './screens/RegistrationScreen';
 import Income from './screens/Income';
-import Expen from './screens/Expen';
+import Music from './screens/Music';
+import CustomerData from './screens/CustomerData';
+import Dropdown2 from './screens/Dropdown'
+import LoadingScreen2 from './screens/LoadingScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+
+// import Icon from 'react-native-ionicons';
 function App() {
 
   return (
@@ -30,9 +35,15 @@ function App() {
         <Stack.Screen options={{ headerShown: false }} name="Income" component={Income} />
       </Stack.Navigator>
     </NavigationContainer>
-    
+
+// {/* <LoadingScreen2></LoadingScreen2> */}
+
+    // <Music></Music>
+
     // <Income></Income>
     
+    // <CustomerData></CustomerData>
+
     // <Expen></Expen>
   );
 

@@ -1,0 +1,148 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 1048576 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (memory/allocation.inline.hpp:61), pid=29572, tid=28200
+#
+# JRE version:  (8.0_71-b15) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.71-b15 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000000000299e000):  JavaThread "Unknown thread" [_thread_in_vm, id=28200, stack(0x0000000002a60000,0x0000000002b60000)]
+
+Stack: [0x0000000002a60000,0x0000000002b60000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x000000000299e000 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=28200, stack(0x0000000002a60000,0x0000000002b60000)]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 37888K, used 655K [0x00000000d6180000, 0x00000000d8b80000, 0x0000000100000000)
+  eden space 32768K, 2% used [0x00000000d6180000,0x00000000d6223d80,0x00000000d8180000)
+  from space 5120K, 0% used [0x00000000d8680000,0x00000000d8680000,0x00000000d8b80000)
+  to   space 5120K, 0% used [0x00000000d8180000,0x00000000d8180000,0x00000000d8680000)
+ ParOldGen       total 86016K, used 0K [0x0000000082400000, 0x0000000087800000, 0x00000000d6180000)
+  object space 86016K, 0% used [0x0000000082400000,0x0000000082400000,0x0000000087800000)
+ Metaspace       used 746K, capacity 4480K, committed 4480K, reserved 1056768K
+  class space    used 75K, capacity 384K, committed 384K, reserved 1048576K
+
+Card table byte_map: [0x0000000012020000,0x0000000012410000] byte_map_base: 0x0000000011c0e000
+
+Marking Bits: (ParMarkBitMap*) 0x00000000687ef600
+ Begin Bits: [0x0000000012eb0000, 0x0000000014e20000)
+ End Bits:   [0x0000000014e20000, 0x0000000016d90000)
+
+Polling page: 0x00000000010c0000
+
+CodeCache: size=245760Kb used=328Kb max_used=328Kb free=245431Kb
+ bounds [0x0000000002c60000, 0x0000000002ed0000, 0x0000000011c60000]
+ total_blobs=57 nmethods=0 adapters=37
+ compilation: enabled
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.020 loading class java/lang/Short
+Event: 0.020 loading class java/lang/Short done
+Event: 0.020 loading class java/lang/Integer
+Event: 0.020 loading class java/lang/Integer done
+Event: 0.020 loading class java/lang/Long
+Event: 0.020 loading class java/lang/Long done
+Event: 0.020 loading class java/lang/NullPointerException
+Event: 0.020 loading class java/lang/NullPointerException done
+Event: 0.020 loading class java/lang/ArithmeticException
+Event: 0.020 loading class java/lang/ArithmeticException done
+
+
+Dynamic libraries:
+0x00007ff7180a0000 - 0x00007ff7180d7000 	C:\ProgramData\Oracle\Java\javapath\java.exe
+0x00007ffda45b0000 - 0x00007ffda47a5000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffda2c50000 - 0x00007ffda2d0d000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffda20c0000 - 0x00007ffda2389000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffda2620000 - 0x00007ffda26cc000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffda3f10000 - 0x00007ffda3fae000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffda43b0000 - 0x00007ffda444b000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffda4250000 - 0x00007ffda437a000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffda35a0000 - 0x00007ffda3740000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffda25f0000 - 0x00007ffda2612000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffda3560000 - 0x00007ffda358a000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffda2390000 - 0x00007ffda249b000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffda1d20000 - 0x00007ffda1dbd000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffda24f0000 - 0x00007ffda25f0000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffd8b7f0000 - 0x00007ffd8ba8a000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1083_none_60bbe31371f34e71\COMCTL32.dll
+0x00007ffda4380000 - 0x00007ffda43b0000 	C:\WINDOWS\System32\IMM32.DLL
+0x0000000068ba0000 - 0x0000000068c72000 	C:\Program Files\Java\jre1.8.0_71\bin\msvcr100.dll
+0x0000000067fe0000 - 0x000000006886f000 	C:\Program Files\Java\jre1.8.0_71\bin\server\jvm.dll
+0x00007ffda3740000 - 0x00007ffda3748000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ffd8b270000 - 0x00007ffd8b279000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffd980b0000 - 0x00007ffd980ba000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffd8ba90000 - 0x00007ffd8bab7000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffda3fb0000 - 0x00007ffda401b000 	C:\WINDOWS\System32\WS2_32.dll
+0x0000000068b90000 - 0x0000000068b9f000 	C:\Program Files\Java\jre1.8.0_71\bin\verify.dll
+0x0000000068b60000 - 0x0000000068b89000 	C:\Program Files\Java\jre1.8.0_71\bin\java.dll
+0x0000000068b40000 - 0x0000000068b56000 	C:\Program Files\Java\jre1.8.0_71\bin\zip.dll
+
+VM Arguments:
+java_command: <unknown>
+java_class_path (initial): .
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=D:\Git\React-Native\expensiveTracker\android\node_modules\.bin;D:\Git\React-Native\expensiveTracker\node_modules\.bin;D:\Git\React-Native\node_modules\.bin;D:\Git\node_modules\.bin;D:\node_modules\.bin;C:\Program Files\nodejs;D:\Git\React-Native\expensiveTracker\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 & MySQL Utilities 1.5\;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 & MySQL Utilities 1.5\Doctrine extensions for PHP\;C:\Program Files\Java\jdk1.8.0_71\bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\nodejs\;C:\wso2\apache-maven-3.8.1\bin;C:\Program Files\Git\cmd;C:\Program Files\MongoDB\Server\4.4\bin;C:\Users\amesh\AppData\Local\Microsoft\WindowsApps;C:\Users\amesh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\amesh\AppData\Local\GitHubDesktop\bin;C:\Users\amesh\AppData\Roaming\npm;C:\Users\amesh\AppData\Local\Android\Sdk;C:\Program Files\heroku\bin
+USERNAME=amesh
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 142 Stepping 12, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10.0 , 64 bit Build 19041 (10.0.19041.1023)
+
+CPU:total 8 (4 cores per cpu, 2 threads per core) family 6 model 142 stepping 12, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx
+
+Memory: 4k page, physical 8235972k(343568k free), swap 33401796k(5776k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.71-b15) for windows-amd64 JRE (1.8.0_71-b15), built on Dec 22 2015 18:15:55 by "java_re" with MS VC++ 10.0 (VS2010)
+
+time: Sun Jul 11 16:16:07 2021
+elapsed time: 0 seconds (0d 0h 0m 0s)
+

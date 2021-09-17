@@ -1,8 +1,18 @@
-import React, { Component,useContext } from 'react'
-import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity,Alert,Image} from 'react-native';
+import React, { Component } from 'react'
+import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity,Alert,Image,StatusBar} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
-import UrlConfig from '../config/UrlConfig'
+import UrlConfig from '../config/UrlConfig';
+import { Shadow } from 'react-native-neomorph-shadows';
+import { Neomorph } from 'react-native-neomorph-shadows';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import FontMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+
 
 // import Users from '../model/users';
 
@@ -54,50 +64,56 @@ export default class  SignUp  extends Component  {
   render() {
     return (
         <View style={styles.container}>
+           <StatusBar backgroundColor='#095587' barStyle="dark-content"/>
         <Animatable.View>
           <Image
           style={styles.tinyLogo}
-          source={require('../assets/fingerprint.png')}
+          source={require('../assets/logo11.png')}
           />
         </Animatable.View>
         <Animatable.View style={styles.HeaderMainContain} animation='fadeInUpBig'>
         <Text style={styles.logo}>Welcome</Text>
-        <View style={styles.inputView} >
+
+         <Neomorph inner style={styles.neomorph4} >
+        <MaterialIcons name="email" size={20} color="#ECF0F3" style={styles.searchIcon} />
           <TextInput  
             style={styles.inputText}
             placeholder="Email" 
-            placeholderTextColor="#353b48"
+            placeholderTextColor="#ECF0F3"
             // autoCapitalize="none"
             onChangeText={(text) => this.setState({ email: text })}
 
             />
 
-        </View>
-        <View style={styles.inputView} >
-          <TextInput  
+        </Neomorph>
+
+        <Neomorph inner  style={styles.neomorph4} >
+        <FontMaterial name="lock" size={20} color="#ECF0F3" style={styles.searchIcon} />
+        <TextInput  
             secureTextEntry
             style={styles.inputText}
             placeholder="Password" 
-            placeholderTextColor="#353b48"
+            placeholderTextColor="#ECF0F3"
             // autoCapitalize="none"
             onChangeText={(text) => this.setState({ password: text })}
  
-/>
+></TextInput>
+        </Neomorph>
 
-        </View>
+
         <TouchableOpacity>
           <Text style={styles.forgot}>Forgot Password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity rounded style={styles.loginBtn} onPress={() =>{
-          this.userLogin();
-          // this.props.navigation.navigate('SignInScreen') 
-          }} >
-        {/* // onPress={()=>{this.props.navigation.navigate('SignInScreen')}} */}
 
+        <Neomorph inner style={styles.neomorph41}>
+          <TouchableOpacity  onPress={() =>{
+          this.userLogin();
+          }} >
         <Text style={styles.loginText1} >Sign In</Text>
 
           </TouchableOpacity>
+          </Neomorph>
 
         <TouchableOpacity onPress={()=> this.props.navigation.navigate('RegistrationScreen')}>
 
@@ -179,9 +195,82 @@ export default class  SignUp  extends Component  {
 // }
 
 const styles = StyleSheet.create({
+  searchSection: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+},
+searchIcon: {
+    padding: 10,
+},
+input: {
+    flex: 1,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 0,
+    backgroundColor: '#fff',
+    color: '#424242',
+},
+  section: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  neomorph41: {
+    marginLeft:100,
+    marginTop:-30,
+    // marginBottom:10,
+
+    borderRadius: 20,
+    shadowRadius: 8,
+    // swapShadows:10,
+    backgroundColor: '#095587',
+    width: 200,
+    height: 60,
+
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: { width: -8, height: -8 },
+
+
+  },
+  neomorph4: {
+    marginLeft:40,
+    marginTop:20,
+    // marginBottom:10,
+
+    borderRadius: 20,
+    shadowRadius: 1,
+    // swapShadows:10,
+    backgroundColor: '#23252A',
+    width: 330,
+    height: 60,
+
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: { width: 3, height: 4 },
+
+
+  },
+  neomorph5: {
+    borderRadius: 80,
+    shadowRadius: 8,
+    backgroundColor: '#0370B8',
+    width: 160,
+    height: 160,
+    shadowOffset: { width: -8, height: -8 },
+  },
     container: {
       flex: 1,
-      backgroundColor: '#2f3640',
+      backgroundColor: '#095587',
       alignItems: 'center',
       justifyContent: 'center',
 
@@ -189,11 +278,11 @@ const styles = StyleSheet.create({
     tinyLogo: {
       position:'relative',
       top:100,
-      width: 90,
-      height:90
+      width: 140,
+      height:140
     },
     HeaderMainContain: {
-      backgroundColor: '#ffffff',
+      backgroundColor: '#23252A',
       width: 412,
       height: 550,
       marginTop:186,
@@ -211,7 +300,7 @@ const styles = StyleSheet.create({
     logo:{
       fontWeight:"bold",
       fontSize:25,
-      color:"#2c3e50",
+      color:"#ECF0F3",
       marginBottom:40,
       marginTop:40,
       marginLeft:43
@@ -224,14 +313,19 @@ const styles = StyleSheet.create({
       marginBottom:20,
       marginLeft:40,
       justifyContent:"center",
-      padding:30
+      // padding:30
     },
     inputText:{
-      height:50,
-      color:"white"
+      color:"#ECF0F3",
+      flex: 1,
+      paddingTop: 10,
+      paddingRight: 10,
+      paddingBottom: 10,
+      paddingLeft: 0,
+     
     },
     forgot:{
-      color:'#1e272e',
+      color:'#ecf0f1',
       fontSize:11,
       marginLeft:266,
       marginBottom:90,
@@ -239,18 +333,18 @@ const styles = StyleSheet.create({
     },
 
     loginBtn:{
-      backgroundColor:'#5567FE',
+      backgroundColor:'#0370B8',
       width:"50%",
       borderRadius:15,
       height:60,
       alignItems:"center",
       justifyContent:"center",
-      marginTop:10,
-      marginLeft:90,
+      marginTop:0,
+      marginLeft:0,
       marginBottom:10
     },
     loginText:{
-      color:'#192a56',
+      color:'#0370B8',
       width:60,
       position:'relative',
       left:260,
@@ -259,7 +353,7 @@ const styles = StyleSheet.create({
 
     },
     LoginMain:{
-
+      color:'#ECF0F3',
       marginLeft:80,
       marginTop:20
 

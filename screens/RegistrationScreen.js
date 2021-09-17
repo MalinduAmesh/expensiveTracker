@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View, Text,Button,TextInput,StyleSheet,TouchableOpacity,KeyboardAvoidingView,TouchableWithoutFeedback,Keyboard  } from 'react-native'
+import {View,Image, Text,Button,TextInput,StyleSheet,TouchableOpacity,KeyboardAvoidingView ,Keyboard ,TouchableWithoutFeedback,StatusBar  } from 'react-native'
 import Heading from '../components/Heading';
 import Input from '../components/Input';
 import FilledButton from '../components/FilledButton';
@@ -10,6 +10,15 @@ import { AuthContext } from '../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UrlConfig from '../config/UrlConfig';
 import * as Animatable from 'react-native-animatable';
+import { Shadow } from 'react-native-neomorph-shadows';
+import { Neomorph } from 'react-native-neomorph-shadows';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { backgroundColor } from 'styled-system';
 export default class RegistrationScreen extends Component {
 
     constructor(props) {
@@ -58,89 +67,99 @@ export default class RegistrationScreen extends Component {
 
     render() {
     return (
-        // <View style ={styles.container}>
-		    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+		<KeyboardAvoidingView style={styles.container}  behavior={Platform.OS === "ios" ? "padding" : "height"}>
+           <StatusBar backgroundColor='#23252A' barStyle="light-content"/>
+
+         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+		 <View style={styles.inner}>
+		    <Animatable.View animation='zoomInUp'
     >
 {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-            <Heading style={styles.title}>SIGN UP</Heading>
+            <Text style={styles.title}>SIGN UP</Text>
 
-            <IconButton name={'close-outline'}/>
-            <Error error={''}></Error>
+			<Animatable.View>
+          <Image
+          style={styles.tinyLogo}
+          source={require('../assets/logo11.png')}
+          />
+        </Animatable.View> 
 
-            <View style={styles.inputView}>
+
+
+            <Neomorph inner style={styles.neomorph4} >
+			<FontAwesome name="user" size={20} color="#ECF0F3" style={styles.searchIcon} />
 					<TextInput
 						style={styles.inputText}
 						placeholder="User Name"
-						placeholderTextColor="#003f5c"
+						placeholderTextColor="#f5f6fa"
 						onChangeText={(name) => this.setState({ name })}
 						// onChangeText={text => this.setState({name: text})}
 					/>
-				</View>
-                <View style={styles.inputView}>
+				</Neomorph>
+
+                <Neomorph inner style={styles.neomorph4} >
+				<MaterialIcons name="email" size={20} color="#ECF0F3" style={styles.searchIcon} />
 					<TextInput
 						style={styles.inputText}
 						placeholder="Email"
-						placeholderTextColor="#003f5c"
+						placeholderTextColor="#f5f6fa"
 						onChangeText={(email) => this.setState({ email })}
 						// onChangeText={text => this.setState({email: text})}
 					/>
-				</View>
-				<View style={styles.inputView}>
+				</Neomorph>
+
+				<Neomorph inner style={styles.neomorph4} >
+				<MaterialIcons name="contacts" size={20} color="#ECF0F3" style={styles.searchIcon} />
 					<TextInput
 						style={styles.inputText}
 						placeholder="Contact"
-						placeholderTextColor="#003f5c"
+						placeholderTextColor="#ffffff"
 						onChangeText={(pnumber) => this.setState({ pnumber })}
 						// onChangeText={text => this.setState({pnumber: text})}
 					/>
-				</View>
+				</Neomorph>
 
-				<View style={styles.inputView}>
+				<Neomorph inner style={styles.neomorph4} >
+				<FontAwesome name="lock" size={20} color="#ECF0F3" style={styles.searchIcon} />
 					<TextInput
 						secureTextEntry
 						style={styles.inputText}
 						placeholder="Password"
-						placeholderTextColor="#003f5c"
+						placeholderTextColor="#f5f6fa"
 						onChangeText={(password) => this.setState({ password })}
 						// onChangeText={text => this.setState({password: text})}
 					/>
-				</View>
-                <View style={styles.inputView}>
+				</Neomorph>
+
+                <Neomorph inner style={styles.neomorph4} >
+				<FontAwesome name="lock" size={20} color="#ECF0F3" style={styles.searchIcon} />
 					<TextInput
 						secureTextEntry
 						style={styles.inputText}
 						placeholder="Confirm Password"
-						placeholderTextColor="#003f5c"
+						placeholderTextColor="#f5f6fa"
 					
 						// onChangeText={text => this.setState({password: text})}
 					/>
-				</View>
+				</Neomorph>
 
-            {/* <FilledButton title={'Redirect'} style={styles.loginBtton} onPress={() =>}}/> */}
-           
-            {/* <FilledButton title={'SIGN UP'} style={styles.loginText1} 
-            onPress={() =>{
-               
-
-                    // props.navigation.pop();
-
-             }}/> */}
-             <TouchableOpacity rounded style={styles.loginBtn} onPress={() =>{
+				<Neomorph inner style={styles.neomorph41} >
+             <TouchableOpacity rounded onPress={() =>{
                 this.submitUserData();
 				this.props.navigation.navigate('SignUp') 
 
-              // this.props.navigation.navigate('SignInScreen') 
               }} >
-            {/* // onPress={()=>{this.props.navigation.navigate('SignInScreen')}} */}
 
-            <Text style={styles.loginText1} >SIGN UP</Text>
+
+            <Text >SIGN UP</Text>
 
               </TouchableOpacity>
+			  </Neomorph>
 			  {/* </TouchableWithoutFeedback> */}
-</KeyboardAvoidingView>
-        // </View>
+</Animatable.View>
+</View>
+</TouchableWithoutFeedback>
+       </KeyboardAvoidingView>
     )
 }
 }
@@ -150,12 +169,64 @@ const styles = StyleSheet.create({
 
     container:{
         flex:1,
-        // paddingTop:120,
-        padding:20,
-        alignItems:'center',
+		backgroundColor:"#23252A",
+		alignItems:'center',
+    justifyContent: 'center',
     },
+	tinyLogo: {
+		width: 140,
+		height:140,
+		alignItems:'center',
+		marginLeft:80,
+		bottom:10
+	  },
+	neomorph41: {
+		marginLeft:65,
+		marginTop:40,
+		// marginBottom:10,
+	
+		borderRadius: 20,
+		shadowRadius: 8,
+		// swapShadows:10,
+		backgroundColor: '#0370B8',
+		width: 200,
+		height: 60,
+	
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		shadowOffset: { width: 8, height: 8 },
+	
+	
+	  },
+	neomorph4: {
+		marginLeft:0,
+		marginTop:20,
+		// marginBottom:10,
+	
+		borderRadius: 20,
+		shadowRadius: 1,
+		// swapShadows:10,
+		backgroundColor: '#23252A',
+		width: 330,
+		height: 60,
+	
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		shadowOffset: { width: 3, height: 4 },
+	
+	
+	  },
+	  searchIcon: {
+		padding: 10,
+	},
     title:{
+		color:'#f5f6fa',
         marginBottom:32,
+		fontSize:30
     },
     loginBtn:{
         backgroundColor:'#5567FE',
@@ -168,24 +239,24 @@ const styles = StyleSheet.create({
         marginLeft:0,
         marginBottom:0
       },
-    inputView:{
-        width:"80%",
-        backgroundColor:"#d1d8e0",
-        borderRadius:15,
-        height:60,
-        marginBottom:20,
-        marginLeft:0,
-        justifyContent:"center",
-        padding:30
-      },
+
       inputText:{
-        height:50,
-        color:"white"
+		  color:"#ECF0F3",
+		flex: 1,
+		paddingTop: 10,
+		paddingRight: 10,
+		paddingBottom: 10,
+		paddingLeft: 0,
       },
     loginBtton:{
         marginVertical:10,
         position:'relative',
         bottom:20
-    }
+    },
+	inner: {
+		padding: 30,
+		flex: 1,
+		justifyContent: "space-around"
+	  },
 
 });

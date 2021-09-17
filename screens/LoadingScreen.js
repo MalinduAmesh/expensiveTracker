@@ -1,15 +1,11 @@
 /* eslint-disable prettier/prettier */
-import React, { Component, useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet,Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BouncingPreloader from 'react-native-bouncing-preloader';
 
 const LoadingScreen = (props) => {
-	// class LoadingScreen extends Component {
-	// 	constructor(props) {
-	// 		super(props);
-	// 		this.state = {};
-	// 	}
+
 	const detectLogin = async () => {
 		const token = await AsyncStorage.getItem('token');
 		if (token) {
@@ -20,26 +16,22 @@ const LoadingScreen = (props) => {
 	};
 
 	useEffect(() => {
+		const timeout = setTimeout(() => {
 		detectLogin();
+
+	}, 3000);
 	}, []);
 		
-	<BouncingPreloader
-	icons={[
-	  'https://www.shareicon.net/data/256x256/2016/05/04/759946_bar_512x512.png',
-	  
-	]}
-	leftRotation="-680deg"
-	rightRotation="360deg"
-	leftDistance={-180}
-	rightDistance={-250}
-	speed={1200} />
-
 	return (
 
 		<View style={styles.loading}>
 
-
-			<ActivityIndicator size="large" color="green" />
+		<Image
+          style={styles.tinyLogo}
+          source={require('../assets/popUp.gif')}
+          />
+		  <Text style={styles.budget}>My Budget Planner </Text>
+			{/* <ActivityIndicator size="large" color="green" /> */}
 		</View>
 	);
 };
@@ -49,8 +41,20 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor:'#ecf0f1'
-	}
+		backgroundColor:'#23252A'
+	},
+	tinyLogo: {
+		position:'relative',
+		top:0,
+		width: 170,
+		height:240
+	  },
+	  budget:{
+		  fontSize:30,
+		  color:'#ffffff',
+		  fontWeight:'bold',
+		  marginTop:20
+	  }
 });
 
 export default LoadingScreen;

@@ -1,65 +1,42 @@
 import React,{useEffect,useState} from 'react';
-import {StatusBar, Text, View, StyleSheet, Dimensions, Image,FlatList,SafeAreaView,ScrollView} from 'react-native';
+import {StatusBar, Text, View, StyleSheet, Dimensions, Image,FlatList,SafeAreaView,ScrollView,RefreshControl} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {createStackNavigator} from '@react-navigation/stack';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {PieChart} from 'react-native-chart-kit';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/colors';
 import plants from '../consts/plants';
-import Expen from './Expen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UrlConfig from '../config/UrlConfig';
 import Income from './Income';
 import {Card} from 'react-native-shadow-cards';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Hr from 'react-native-hr-component'
+import styles from 'react-native-hr-component/styles';
+import { Shadow } from 'react-native-neomorph-shadows';
+import { Neomorph } from 'react-native-neomorph-shadows';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 // import { Card, ListItem, Button } from 'react-native-elements'
 // const width = Dimensions.get('window').width / 2 - 30;
 
-//pie chart data
-const data = [
-    {
-        name: "Income",
-        value: 50000,
-        color: "#227093",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-    },
-    {
-        name: "Expense",
-        value: 30000,
-        color: "#ffb142",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-    },
-    {
-        name: "Balance",
-        value: 20000,
-        color: "#218c74",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-    }
-];
 
-const screenWidth = Dimensions.get("window").width;
-
-const chartConfig = {
-    backgroundGradientFrom: "#e55039",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false // optional
-};
-
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 
 const HomeScreen = () => {
-    
+  
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
     // const [catergoryIndex, setCategoryIndex] = React.useState(0);
     // const categories = [];
 
@@ -67,10 +44,14 @@ const HomeScreen = () => {
     const [description,setDescription] = React.useState('')
     const [amount,setAmount] = React.useState('')
     const [test,setTest] =React.useState('');
+    const [fullTest ,setfullTest] = React.useState('')
+    const [refreshing, setRefreshing] = React.useState(false);
 
+    var fullIncomeAmount;
+    useEffect(
 
-
-    useEffect(async() =>{
+      // Get loged customer email
+      async() =>{
       
       const token = await AsyncStorage.getItem('token');
       fetch(`${UrlConfig.BASE_URL}`, {
@@ -81,6 +62,7 @@ const HomeScreen = () => {
 
       .then((res) => res.text())
 			.then((data) => {
+      
 				fetch(`${UrlConfig.BASE_URL}/income/getIncomeD`, {
 					method: 'post',
           headers: { 'Content-Type': 'application/json' },
@@ -89,11 +71,24 @@ const HomeScreen = () => {
 					})
         })
 
+        // Get amount and set to the State
         .then((response) => response.json())
         .then((response) => {
-          console.log( "Get All Data",response);
-          var fullIncomeTest = setTest(response[0].amount);
-          console.log("Print Amount ",response[0].amount)
+
+         var FullIncomeTot = 0;
+         
+          for(var i = 0; i < response.length; i++){
+
+             FullIncomeTot +=parseInt(response[i].amount);
+          }
+          setTest(FullIncomeTot)
+        
+
+
+
+          // console.log( "Get All Data",response);
+          // var fullIncomeTest = setTest(response[0].amount);
+          // console.log("Print Amount ",response[0].amount)
         })
           .catch(function(error) {
             console.log('There has been a problem with your fetch operation: ' + error.message);
@@ -102,8 +97,66 @@ const HomeScreen = () => {
             });
 			});
 
-    })
 
+      const token1 = await AsyncStorage.getItem('token');
+      fetch(`${UrlConfig.BASE_URL}`, {
+        headers: new Headers({
+          Authorization: 'Test ' + token1
+        })
+      })
+
+      .then((res) => res.text())
+			.then((data) => {
+          console.log("+",data)
+				fetch(`${UrlConfig.BASE_URL}/expense/getExpenseD`, {
+					method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						email: data,
+					})
+        })
+
+
+        // Get Expense Details and set to the state
+        .then((response) => response.json())
+        .then((response) => {
+
+         var FullExpenseTot = 0;
+         
+          for(var i = 0; i < response.length; i++){
+
+            FullExpenseTot +=parseInt(response[i].amount);
+          }
+          setfullTest(FullExpenseTot)
+        
+
+
+
+          // console.log( "Get All Data",response);
+          // var fullIncomeTest = setTest(response[0].amount);
+          // console.log("Print Amount ",response[0].amount)
+        })
+          .catch(function(error) {
+            console.log('There has been a problem with your fetch operation: ' + error.message);
+             // ADD THIS THROW error
+              throw error;
+            });
+			});
+
+      // Calculate the Balance
+        const FullIncome = parseInt(test)
+        const fullExpense = parseInt(fullTest)
+    
+        const fullBalance = (FullIncome - fullExpense)
+    
+        setBalance(fullBalance)
+
+
+    },[refreshing])
+
+    // setBalance(() =>{
+      
+    // })
 
     const [categorie, setcategorie] = useState('');
     const [outgoin, setOutGoin] = useState('');
@@ -153,92 +206,111 @@ const HomeScreen = () => {
       setcategorie('');
       setOutGoin('');
     
-  
-      const token = await AsyncStorage.getItem('token');
-      fetch(`${UrlConfig.BASE_URL}`, {
-        headers: new Headers({
-          Authorization: 'Test ' + token
-        })
-      })
-        .then((res) => res.text())
-        .then((data) => {
-          console.log("Print What Data",data)
-          fetch(`${UrlConfig.BASE_URL}/income/addIncome`, {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: data,
-              month: date,
-              income:income,
-              text:categorie,
-              amount:outgoin,
-  
-            })
-          })
-            .then((response) => response.json())
-            .then((response) => {
-              console.log(response);
-              alert('Your Income Added');
-  
-  
-  
-            })
-            .catch(function(error) {
-              console.log('There has been a problem with your fetch operation: ' + error.message);
-               // ADD THIS THROW error
-                throw error;
-              });
-        });
+
     };
+
+    //pie chart data
+const data = [
+  {
+      name: "Income",
+      value:parseInt(test) ? parseInt(test) : 0 ,
+      color: "#0370B8",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15
+  },
+  {
+      name: "Expense",
+      value:parseInt(fullTest) ? parseInt(fullTest) : 0 ,
+      color: "#f39c12",
+      legendFontColor: "#f39c12",
+      legendFontSize: 15
+  },
+  {
+      name: "Balance",
+      value:parseInt(balance) ? parseInt(balance) : 0 ,
+      color: "#218c74",
+      legendFontColor: "#218c74",
+      legendFontSize: 15
+  }
+];
+
+
+const screenWidth = Dimensions.get("window").width;
+
+// Pie Chart config Data
+const chartConfig = {
+  backgroundGradientFrom: "#e55039",
+  backgroundGradientFromOpacity: 0,
+  backgroundGradientTo: "#08130D",
+  backgroundGradientToOpacity: 0.5,
+  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+  strokeWidth: 2, // optional, default 3
+  barPercentage: 0.5,
+  useShadowColorFromDataset: false // optional
+};
+
+
   
-    useEffect(async() =>{
-      setTotal(gigs.reduce((total,gig) => total + Number(gig.outgoin),0));
-      setBalance(() =>{
-        const FullIncome = parseInt(test)
-        const fullExpense = parseInt(total)
+    // useEffect(async() =>{
+    //   setTotal(gigs.reduce((total,gig) => total + Number(gig.outgoin),0));
+    //   setBalance(() =>{
+    //     const FullIncome = parseInt(test)
+    //     const fullExpense = parseInt(total)
     
-        const fullBalance = (FullIncome - fullExpense)
+    //     const fullBalance = (FullIncome - fullExpense)
     
-        setBalance(fullBalance)
-      })
-    },[gigs])
+    //     setBalance(fullBalance)
+    //   })
+    // },[gigs])
   
 
 
     return (
-      <SafeAreaView style={style.container}>
-         <ScrollView style={style.scrollView}>
-        {/* <View > */}
-            <StatusBar backgroundColor='#E3E7F1' barStyle="dark-content"/>
+
+      <ScrollView style={style.container2} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+
+      <Animatable.View animation='fadeInDownBig' style={style.container}>
+            <StatusBar backgroundColor='#0370B8' barStyle="dark-content"/>
+
             <Animatable.View style={style.HeaderMainContain} animation='fadeInUpBig'>
-                <View style={style.monthlyOverviewContainer}>
-                <View style={style.detailsContainer}>
-                        <View style={style.monthlyExpenseContainer1}>
-                        <Text style={style.expenseTitle1}>Income</Text>
-                        <Text style={style.expenseValue1}>${test}</Text>
-                        </View>
-                    </View>
-                    <View style={style.detailsContainer}>
+           
+            <View style={style.monthlyOverviewContainer}>
+            <View style={style.detailsContainer}>
+
                         <View style={style.monthlyExpenseContainer}>
-                        <Text style={style.expenseTitle}>Balance</Text>
-                        <Text style={style.expenseValue}>${balance}</Text>
+                        <Text style={style.expenseTitle5}>Welcome ,</Text>
+                        <Text style={style.expenseTitle4}>Here's your finacial report this month</Text>
+                        <Image style={style.tinyLogo}
+                              source={require('../assets/logo2.png')}></Image>
                         </View>
+
                     </View>
-                    <View style={style.detailsContainer}>
-                        <View style={style.monthlyExpenseContainer2}>
-                        <Text style={style.expenseTitle2}>Expense</Text>
-                        <Text style={style.expenseValue2}>${total}</Text>
-                        </View>
+                </View>
+              
+            </Animatable.View>
+            
+            <Animatable.View style={style.HeaderMainContain} animation='fadeInUpBig'>
+             <View style={style.neomorph41} >
+            <View style={style.detailsContainer45}>
+
+                        <View style={style.monthlyExpenseContainer3}>
+                        <Text style={style.expenseTitle}>TOTAL BALANCE</Text>
+                        <Text style={style.expenseValue}>${balance}.00</Text>
+                        {/* <Text style={{color:"#0370B8"}}>---------------------------------------------------------------------------------------</Text> */}
+                        {/* <Hr text={""} lineColor="#0370B8" /> */}
+                        </View>                 
                     </View>
                 </View>
             </Animatable.View>
-            <Animatable.View style={style.headerContainer} animation='bounceIn' duration={1500}>
-            <Text style={{fontSize: 25, fontWeight: 'bold', color: '#414754', left: 20,top:5}}>Overview</Text>
-            <Text style={style.fullName}>User Name</Text>
+
+            <Animatable.View animation='bounceIn' duration={1500}>
+            <Neomorph inner style={style.neomorph4} >
+            <Text style={{fontSize: 25, fontWeight: 'bold', color: '#f1f2f6', left: 20,top:5}}>Reports</Text>
+            <Text></Text>
 
                 <PieChart style={style.pieChart}
                     data={data}
-                    width={screenWidth}
+                    width={370}
                     height={200}
                     doughnut={true}
                     chartConfig={chartConfig}
@@ -248,9 +320,66 @@ const HomeScreen = () => {
                     coverFill={'#FFF'}
                     absolute
                 />
+                </Neomorph>
             </Animatable.View>
-            <Text style={{fontSize: 20, fontWeight: 'bold', color: '#414754', left: 20,top:5}}>All Transactions</Text>
-            {gigs &&
+            <Animatable.View style={style.HeaderMainContain} animation='fadeInUpBig'>
+             <Neomorph inner style={style.neomorph43} >
+            <View style={style.detailsContainer4}>
+                        
+                         <View style={style.detailsContainer1}>
+                        <View style={style.monthlyExpenseContainer1}>
+                        <SimpleLineIcons name="arrow-up" size={20} color="#10ac84" style={style.searchIcon} />
+                        <Text style={style.expenseTitle1}>Income</Text>
+                        <Text style={style.expenseValue1}>${test}</Text>
+                        </View>
+                    </View>
+                   
+                    <View style={style.detailsContainer2}>
+                        <View style={style.monthlyExpenseContainer2}>
+                        <SimpleLineIcons name="arrow-down" size={20} color="#c23616" style={style.searchIcon} />
+                        <Text style={style.expenseTitle2}>Expense</Text>
+                        <Text style={style.expenseValue2}>${fullTest}</Text>
+                        </View>
+                    </View> 
+
+                    <View style={style.detailsContainer5}>
+                    <FontAwesome5 name="file-invoice-dollar" size={20} color="#f1c40f" style={style.searchIcon1} />
+                      <Text style={style.tips}>Your budget seem's not stable. here's tips for u</Text>
+                      <Neomorph inner style={style.neomorph42} >
+                      <MaterialIcons name="navigate-next" size={40} color="#23252A" style={style.searchIcon2} />
+                      </Neomorph>
+
+                    </View>
+                    
+                    </View>
+                </Neomorph>
+            </Animatable.View>
+            {/* <Animatable.View style={style.HeaderMainContain2} animation='fadeInUpBig'>
+                <View style={style.monthlyOverviewContainer2}>
+                <View style={style.detailsContainer}>
+                        <View style={style.monthlyExpenseContainer1}>
+                        <Text style={style.expenseTitle1}>Income</Text>
+                        <Text style={style.expenseValue1}>${test}</Text>
+                        </View>
+                    </View>
+                   
+                    <View style={style.detailsContainer}>
+                        <View style={style.monthlyExpenseContainer2}>
+                        <Text style={style.expenseTitle2}>Expense</Text>
+                        <Text style={style.expenseValue2}>${total}</Text>
+                        </View>
+                    </View>
+                </View>
+            </Animatable.View> */}
+
+        </Animatable.View>
+        </ScrollView>
+           );
+          };
+          
+           
+           
+            {/* {gigs &&
 		gigs.map((gig,i,t) => (
       <Card style={{padding: 7,marginBottom:10,marginLeft:20,marginTop:5}}>
       <Text style ={{marginLeft:140}} key={i}>{gig.categorie} {gig.outgoin} </Text>
@@ -258,8 +387,8 @@ const HomeScreen = () => {
 			
       
 		))
-		}
-
+		} */}
+{/* 
             <Animatable.View style={styles.HeaderMainContain} animation='zoomInUp'>
 
             <Text style={styles.logo}>Add Income</Text>
@@ -338,7 +467,7 @@ const HomeScreen = () => {
 
               </TouchableOpacity>
     
-            </Animatable.View>
+            </Animatable.View> */}
 
        
 
@@ -360,21 +489,128 @@ const HomeScreen = () => {
 
       {/* </Animatable.View> */}
         {/* </View> */}
-      </ScrollView>
-        </SafeAreaView>
-    );
-};
+
 
 const {width, height} = Dimensions.get('screen');
 
 const style = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#ecf0f1',
-      alignItems: 'center',
-      justifyContent: 'center',
-      // paddingTop:,
+      top:65,
+      height:757,
+      backgroundColor: '#23252A',
+
+      // flex: 1,
+      // alignItems: 'center',
+      // justifyContent: 'center',
     },
+    container2: {
+      // top:50,
+
+      flex: 1,
+    },
+    tinyLogo: {
+      position:'relative',
+      bottom:50,
+      left:160,
+      width: 40,
+      height:40,
+      borderRadius:40
+    },
+    neomorph41: {
+      marginLeft:35,
+      // borderRadius: 20,
+      borderTopLeftRadius:30,
+      borderTopRightRadius:30,
+      // shadowRadius: 1000,
+      backgroundColor: '#0370B8',
+      width: 350,
+      height: 105,
+      bottom:95,
+      flex: 1,
+
+      justifyContent: 'center',
+      alignItems: 'center',
+      // shadowOffset: { width: -8, height: -8 },
+    
+    
+      },
+      neomorph43: {
+        marginLeft:30,
+        borderRadius: 20,
+        // borderTopLeftRadius:100,
+        shadowRadius: 8,
+        backgroundColor: '#23252A',
+        width: 350,
+        height: 220,
+        bottom:50,
+        flex: 1,
+  
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowOffset: { width: -8, height: -8 },
+      
+      
+        },
+      neomorph42: {
+        // marginLeft:5,
+        borderRadius: 10,
+        // borderTopLeftRadius:100,
+        shadowRadius: 5,
+        backgroundColor: '#0370B8',
+        width: 30,
+        height: 30,
+        bottom:0,
+        flex: 1,
+        right:70,
+        // marginRight:90,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowOffset: { width: -8, height: -8 },
+      
+      
+        },
+      //   headerContainer: {
+      //     backgroundColor: '#ffffff',
+      //     width: 380,
+      //     height: 300,
+      //     top:85,
+      //     borderRadius: 30,
+      //     elevation: 5,
+      //     // marginLeft:,
+      //     shadowColor: '#4949a3',
+      //     shadowOffset: {
+      //         width: 0,
+      //         height: 10
+      //     },
+      //     shadowOpacity: 0.25,
+      //     shadowRadius: 3.5,
+      // },
+        neomorph4: {
+          marginLeft:21,
+          // marginTop:20,
+          // marginBottom:10,
+          borderRadius: 20,
+          shadowRadius: 1,
+          // swapShadows:10,
+          elevation: 5,
+          backgroundColor: '#23252A',
+          width: 370,
+          height: 270,
+          top:-70,
+          bottom:0,
+          shadowOffset: { width: 3, height: 4 },
+
+          },
+    searchIcon:{
+    padding:6
+    },
+    searchIcon1:{
+      left:0
+      },
+      searchIcon2:{
+        right:4,
+        bottom:5
+        },
     cardAppMain:{
         backgroundColor: '#ffffff',
         width: 380,
@@ -389,22 +625,7 @@ const style = StyleSheet.create({
         shadowRadius: 3.5,
         // marginBottom:10
     },
-    headerContainer: {
-        backgroundColor: '#ffffff',
-        width: 380,
-        height: 300,
-        bottom:3,
-        borderRadius: 30,
-        elevation: 5,
-        marginLeft:16,
-        shadowColor: '#4949a3',
-        shadowOffset: {
-            width: 0,
-            height: 10
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.5,
-    },
+
     userImage: {
         alignSelf: 'center',
         top: 20
@@ -423,13 +644,26 @@ const style = StyleSheet.create({
         marginBottom:30
     },
     monthlyOverviewContainer: {
-        width: '100%',
-        height: 150,
-        backgroundColor: '#10ac84',
+      width: '100%',
+      height: 220,
+      marginTop:-70,
+      backgroundColor: '#0370B8',
+      alignItems: 'center',
+      borderBottomLeftRadius: 50,
+      borderBottomRightRadius: 50
+  },
+    monthlyOverviewContainer2: {
+        marginTop:0,
+        bottom:42,
+        // marginBottom:350,
+        width: '90%',
+        height: 200,
+        backgroundColor: '#e1b12c',
         alignItems: 'center',
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30
+        borderRadius:30,
+        marginLeft:20
     },
+
     monthContainer: {
         width: '100%',
         height: 30,
@@ -446,12 +680,69 @@ const style = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         height: 100,
-        bottom: 30,
+        // bottom: ,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
     },
-    monthlyIncomeContainer: {
+    detailsContainer4: {
+      position: 'absolute',
+      width: '100%',
+      height: 100,
+      top:-75 ,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+  },
+  detailsContainer45: {
+    position: 'absolute',
+    width: '100%',
+    height: 100,
+    top:25.9 ,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+},
+    detailsContainer1: {
+      position: 'absolute',
+      width: '100%',
+      height: 100,
+      // bottom: ,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      top:95,
+      left:50
+  },
+  detailsContainer2: {
+    position: 'absolute',
+    width: '100%',
+    height: 100,
+    // bottom: ,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    top:95,
+    right:50
+},
+detailsContainer5: {
+  position: 'absolute',
+  width: '100%',
+  height: 100,
+  // bottom: ,
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  alignItems: 'center',
+  top:175,
+  right:0,
+  left:47
+},
+tips:{
+  width:"50%",
+  right:30,
+fontSize:11,
+color:'#f1f2f6'
+},    monthlyIncomeContainer: {
         width: 100,
         height: '60%',
         flexDirection: 'column',
@@ -485,65 +776,96 @@ const style = StyleSheet.create({
         fontSize: 15,
     },
     monthlyExpenseContainer: {
-        width: 100,
+        width: "100%",
         height: '60%',
         flexDirection: 'column',
         justifyContent: 'space-evenly',
         alignItems: 'center',
+        marginTop:50
     },
+    monthlyExpenseContainer3: {
+      width: "100%",
+      height: '60%',
+      flexDirection: 'column',
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+  },
     monthlyExpenseContainer1: {
       width: 100,
       height: '60%',
      marginRight:250,
-      flexDirection: 'column',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
+     flex: 1,
+    //  flexDirection: 'row',
+     justifyContent: 'center',
+     alignItems: 'center',
   },
   monthlyExpenseContainer2: {
     width: 100,
     height: '60%',
     marginLeft:250,
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    flex: 1,
+    // flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
+
 },
     expenseValue: {
        
         fontWeight: 'bold',
-        fontSize: 25,
-        color: '#323432'
+        fontSize: 30,
+        color: '#ffffff',
+        marginBottom:12
     },
     expenseValue1: {
        
       fontWeight: 'bold',
       fontSize: 20,
-      color: '#323432'
+      color: '#10ac84'
   },
   expenseValue2: {
        
     fontWeight: 'bold',
     fontSize: 20,
-    color: '#323432'
+    color: '#c23616'
 },
     expenseTitle: {
         color: 'white',
-        fontSize: 20,
+        fontSize: 12,
+        fontWeight: '100',
+        bottom:8
+    },
+    expenseTitle4: {
+      top:12,
+      right:63,
+        color: '#f1f2f6',
+        fontSize: 12,
         fontWeight: '100'
+    },
+    expenseTitle5: {
+      top:0,
+      right:113,
+        color: 'white',
+        fontSize: 25,
+        fontWeight: 'bold'
     },
     expenseTitle1: {
       color: 'white',
-      fontSize: 16,
+      fontSize: 11,
       fontWeight: '100'
   },
   expenseTitle2: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 11,
     fontWeight: '100'
 },
     HeaderMainContain: {
         width: width,
         height: 120,
     },
+    HeaderMainContain2: {
+      width: width,
+      height: 120,
+  },
 
       categoryTextSelected: {
         color: COLORS.green,
@@ -579,84 +901,13 @@ const style = StyleSheet.create({
         flex: 1,
         color: COLORS.dark,
       },
-      scrollView: {
-        backgroundColor: '#f5f6fa',
-        // marginHorizontal: 20,
-        width:"100%"
-      },
+      // scrollView: {
+      //   backgroundColor: '#f5f6fa',
+      //   // marginHorizontal: 20,
+      //   width:"100%"
+      // },
  
 });
-
-const styles = StyleSheet.create({
-  container: {
-      flex: 1,
-      backgroundColor: '#ecf0f1',
-      alignItems: 'center',
-      justifyContent: 'center',
-
-    },
-    HeaderMainContain: {
-      backgroundColor: '#ffffff',
-      width: 412,
-      height: 806,
-      marginTop:0,
-      bottom:0,
-      borderRadius:15,
-      // borderTopLeftRadius:80,
-      elevation: 5,
-      shadowColor: '#4949a3',
-      shadowOffset: {
-          width: 0,
-          height: 10
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.5,
-  },
-    logo:{
-      fontWeight:"bold",
-      fontSize:25,
-      color:"#2c3e50",
-      marginBottom:20,
-      marginTop:0,
-      marginLeft:43
-    },
-    inputView:{
-      width:"80%",
-      backgroundColor:"#d1d8e0",
-      borderRadius:15,
-      height:60,
-      marginBottom:20,
-      marginLeft:40,
-      justifyContent:"center",
-      padding:30
-    },
-    inputText:{
-      height:50,
-      color:"white"
-    },
-    loginBtn:{
-      backgroundColor:'#5567FE',
-      width:"50%",
-      borderRadius:15,
-      height:60,
-      alignItems:"center",
-      justifyContent:"center",
-      marginTop:10,
-      marginLeft:90,
-      marginBottom:10
-    },
-    loginBtn1:{
-      backgroundColor:'#d1d8e0',
-      width:"80%",
-      borderRadius:15,
-      height:60,
-      alignItems:"center",
-      justifyContent:"center",
-      marginTop:10,
-      marginLeft:40,
-      marginBottom:10
-    },
-})
 
 
 const HomeStack = createStackNavigator();

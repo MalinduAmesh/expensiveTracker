@@ -5,7 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UrlConfig from '../config/UrlConfig';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { TransactionContext } from "../contexts/TransactionContext";
+import { TransactionContext } from "../contexts/TransactionContext"
 import { Shadow } from 'react-native-neomorph-shadows';
 import { Neomorph } from 'react-native-neomorph-shadows';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -13,14 +13,12 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default function Income() {
+export default function ExpenseScreen() {
 
-  // const [description, setDescription] = useState('');
-	// const [amount, setAmount] = useState('');
 
-  // Load Month drop down menu box
+  // Load Month drop down Box
   const data = [
     { label: 'January', value: 'January' },
     { label: 'February', value: 'February' },
@@ -36,28 +34,21 @@ export default function Income() {
     { label: 'December', value: 'December' }
   ];
 
-  const [categorie, setcategorie] = useState('');
-  const [outgoin, setOutGoin] = useState('');
+    const [categorie, setcategorie] = useState('');
+    const [outgoin, setOutGoin] = useState('');
 	const [gigs, setGigs] = useState([{categorie, outgoin}]);
 	const [total, setTotal] = useState(0);
-  const [fullIncome,setFullIncome] = useState(0);
+    const [fullIncome,setFullIncome] = useState(0);
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [_id, set_id] = useState('');
 
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-
-
-  const [_id, set_id] = useState('');
-	const [income, setIncome] = useState('');
-	const [model, setModel] = useState(false);
-
-  const [open, setOpen] = useState(false);
-	const [value, setValue] = useState(null);
-	const [items, setItems] = useState(true);
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState(data);
 
 	
-
-// Set new Date to the calender
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
@@ -76,7 +67,6 @@ export default function Income() {
 
   const getUserData = async () => {
  
-    // making Flat list
     setGigs([
       ...gigs,
       {
@@ -88,7 +78,8 @@ export default function Income() {
     setcategorie('');
     setOutGoin('');
   
-// Post income data to the table
+    // Post data to the Income Table 
+
 		const token = await AsyncStorage.getItem('token');
 		fetch(`${UrlConfig.BASE_URL}`, {
 			headers: new Headers({
@@ -97,15 +88,15 @@ export default function Income() {
 		})
 			.then((res) => res.text())
 			.then((data) => {
-        console.log("Print What Data",data)
-				fetch(`${UrlConfig.BASE_URL}/income/addIncome`, {
+
+				fetch(`${UrlConfig.BASE_URL}/expense/addExpense`, {
 					method: 'post',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						email: data,
-						month: date,
-            income:"Income",
-            text:categorie,
+						month: value,
+                        expense:"Expense",
+                        text:categorie,
 						amount:outgoin,
 
 					})
@@ -113,7 +104,7 @@ export default function Income() {
 					.then((response) => response.json())
 					.then((response) => {
 						console.log(response);
-						alert('Your Income Added');
+						alert('Your Expense Added');
 
 
 
@@ -125,33 +116,28 @@ export default function Income() {
             });
 			});
 	};
-const setTotalOncome = async () => {
-
-
-}
+  
+// Get FatList type
 	useEffect(() =>{
 		setTotal(gigs.reduce((total,gig) => total + Number(gig.outgoin),0));
     setFullIncome(gigs.reduce((fullIncome,gig) => fullIncome - Number(gig.outgoin),0))
 	},[gigs])
 
-const onPressC = (()=>{
-  const newState = !items;
-  setItems(newState)
-})
 
-const buttonBg = items ? "#2980b9" : "#e67e22"
+
     return (
         <View style={styles.container}>
-            <Animatable.View animation='flipOutY'>
+            <Animatable.View animation='zoomInUp'>
 
             </Animatable.View>
 
-            <Animatable.View style={styles.HeaderMainContain} animation='zoomIn'>
-            <Text style={styles.logo}>Add Income</Text>
+            <Animatable.View style={styles.HeaderMainContain} animation='zoomInUp'>
+
+            <Text style={styles.logo}>Add Expense</Text>
             {/* <Text>Income : $ {total}</Text>
             <Text>Expense : $ {fullIncome}</Text> */}
 
-            {/* <DropDownPicker
+            <DropDownPicker
 					style={styles.monthPicker}
 					open={open}
 					value={value}
@@ -163,14 +149,14 @@ const buttonBg = items ? "#2980b9" : "#e67e22"
 						setValue(value);
 						console.log('selected', value);
 					}}
-				/> */}
-            <TouchableOpacity rounded style={styles.loginBtn1} onPress={showDatepicker} >
-            <Text style={styles.loginText1} >date</Text>
+				/>
+            {/* <TouchableOpacity rounded style={styles.loginBtn1} onPress={showDatepicker} >
+            <Text style={styles.loginText1} >Add Date</Text>
 
  
 
-              </TouchableOpacity>
-              {show && (
+              </TouchableOpacity> */}
+              {/* {show && (
                 <DateTimePicker
                   testID="dateTimePicker"
                   value={date}
@@ -180,7 +166,7 @@ const buttonBg = items ? "#2980b9" : "#e67e22"
                   onChange={onChange}
                   
                 />
-              )}
+              )} */}
     
             {/* <View style={styles.inputView} >
               <TextInput  
@@ -195,32 +181,21 @@ const buttonBg = items ? "#2980b9" : "#e67e22"
 
             </View> */}
 
-           
             <Neomorph inner style={styles.neomorph4} >
-            <TextInput  
+              <TextInput  
                
-               style={styles.inputText}
-               placeholder="Amount" 
-               label="Outgoing"
-               value={outgoin}
-               placeholderTextColor="#ffffff"
-               onChangeText={(text) => setOutGoin(text)}
-    
-               />
-            </Neomorph>
+                style={styles.inputText}
+                placeholder="Amount" 
+                label="Outgoing"
+                value={outgoin}
+                placeholderTextColor="#ffffff"
+                onChangeText={(text) => setOutGoin(text)}
+     
+                />
 
+</Neomorph>
 
-            {/* <TouchableOpacity>
-                                <View
-                                    style={[styles.interestContainer, {backgroundColor: '#D4B630'}]}>
-                                    <MaterialCommunityIcons name='bank-outline' size={35}
-                                                            color='#27231F'/>
-                                    <Text
-                                        style={[styles.interestTitle, {color: '#27231F'}]}>Interest</Text>
-                                </View>
-                            </TouchableOpacity> */}
-                
-            <Neomorph inner style={styles.neomorph4} >
+<Neomorph inner style={styles.neomorph4} >
               <TextInput  
                 style={styles.inputText}
                 placeholder="Category" 
@@ -229,41 +204,24 @@ const buttonBg = items ? "#2980b9" : "#e67e22"
                 onChangeText={(text) => setcategorie(text)}
                
                 />
+                </Neomorph>
 
-      </Neomorph>
-
-      <Neomorph inner style={{  marginLeft:110,
-      marginTop:60,
-      // marginBottom:10,
-    
-      borderRadius: 20,
-      shadowRadius:7,
-      // swapShadows:10,
-      backgroundColor: buttonBg,
-      width: 200,
-      height: 60,
-    
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      shadowOffset: { width: 8, height: 8 },
-    }}>
-             <TouchableOpacity rounded style={{width:"100%",height:"100%",flex: 1,alignItems: 'center',justifyContent: 'center'}} onPress={() =>{
+                <Neomorph inner style={styles.neomorph41} >
+             <TouchableOpacity rounded onPress={() =>{
                 getUserData()
-                onPressC()
 
               }} >
 
 
-            <Text style={styles.loginText1} >Add Income</Text>
+            <Text style={styles.loginText1} >Add Expense</Text>
 
               </TouchableOpacity>
 			  </Neomorph>
+              {/* <TouchableOpacity rounded style={styles.loginBtn}onPress={() => {
+						getUserData();
+					}} >
 
-              {/* <TouchableOpacity rounded style={styles.loginBtn} onPress={() => {getUserData();}} >
-
-            <Text style={styles.loginText1} >Add Income</Text>
+            <Text style={styles.loginText1} >Add Expense</Text>
 
               </TouchableOpacity> */}
               {/* {gigs &&
@@ -289,47 +247,46 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
   
       },
+      neomorph4: {
+        marginLeft:40,
+        marginTop:20,
+        // marginBottom:10,
       
-	neomorph4: {
-		marginLeft:40,
-		marginTop:20,
-		// marginBottom:10,
-	
-		borderRadius: 20,
-		shadowRadius: 1,
-		// swapShadows:10,
-		backgroundColor: '#23252A',
-		width: 330,
-		height: 60,
-	
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-		shadowOffset: { width: 3, height: 4 },
-	
-	
-	  },
-    neomorph41: {
-      marginLeft:110,
-      marginTop:60,
-      // marginBottom:10,
-    
-      borderRadius: 20,
-      shadowRadius:7,
-      // swapShadows:10,
-      backgroundColor: "#2980b9",
-      width: 200,
-      height: 60,
-    
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      shadowOffset: { width: 8, height: 8 },
-    
-    
-      },
+        borderRadius: 20,
+        shadowRadius: 1,
+        // swapShadows:10,
+        backgroundColor: '#23252A',
+        width: 330,
+        height: 60,
+      
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowOffset: { width: 3, height: 4 },
+      
+      
+        },
+        neomorph41: {
+          marginLeft:110,
+          marginTop:60,
+          // marginBottom:10,
+        
+          borderRadius: 20,
+          shadowRadius: 7,
+          // swapShadows:10,
+          backgroundColor: '#0370B8',
+          width: 200,
+          height: 60,
+        
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowOffset: { width: 8, height: 8 },
+        
+        
+          },
       HeaderMainContain: {
         backgroundColor: '#23252A',
         width: 412,
@@ -399,15 +356,4 @@ const styles = StyleSheet.create({
         margin: 20,
         width: 320
       },
-      interestContainer: {
-        width: 60,
-        height: 60,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 15,
-        /*elevation: 10,*/
-    },
-    interestTitle: {
-      fontSize: 12,
-  },
 })
